@@ -1,0 +1,152 @@
+import numpy as np
+
+
+def load_labeled_sudoku():
+    puzzle = np.array([
+        [7, 2, 0, 0, 0, 1, 0, 0, 0],
+        [8, 0, 0, 0, 0, 0, 0, 1, 9],
+        [4, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 6, 9, 0, 0, 1, 0, 3],
+        [0, 4, 0, 0, 0, 0, 9, 2, 0],
+        [9, 0, 2, 1, 0, 8, 0, 7, 0],
+        [2, 0, 0, 0, 0, 6, 0, 9, 0],
+        [3, 9, 0, 0, 0, 7, 0, 0, 0],
+        [6, 8, 0, 3, 0, 0, 5, 4, 1]
+    ])
+
+    solution = np.array([
+        [7, 2, 3, 8, 9, 1, 6, 5, 4],
+        [8, 6, 5, 2, 3, 4, 7, 1, 9],
+        [4, 1, 9, 7, 6, 5, 8, 3, 2],
+        [5, 7, 6, 9, 4, 2, 1, 8, 3],
+        [1, 4, 8, 6, 7, 3, 9, 2, 5],
+        [9, 3, 2, 1, 5, 8, 4, 7, 6],
+        [2, 5, 1, 4, 8, 6, 3, 9, 7],
+        [3, 9, 4, 5, 1, 7, 2, 6, 8],
+        [6, 8, 7, 3, 2, 9, 5, 4, 1]
+    ])
+
+    def format_board(board):
+        col_labels = "    A B C D E F G H I"
+        lines = [col_labels]
+        for i, row in enumerate(board):
+            row_str = f"{i+1} | " + " ".join(str(x) for x in row)
+            lines.append(row_str)
+        return "\n".join(lines)
+
+    puzzle_str = format_board(puzzle)
+    solution_str = format_board(solution)
+    
+    return puzzle, solution
+
+
+def display_board(board):
+    # Loop through each row in the board
+    for i in range(9):
+        # Add a horizontal separator every 3 rows, except at the top
+        if i % 3 == 0 and i != 0:
+            print("-" * 21) 
+
+        # Loop through each column in the row
+        for j in range(9):
+            # Add a vertical separator every 3 columns, except at the start
+            if j % 3 == 0 and j != 0:
+                print("|", end=" ")
+
+            # Print the number with spacing, no newline yet
+            if j == 8:
+                # At the end of the row, print the last number and move to the next line
+                print(board[i][j])
+            else:
+                # Print the number followed by a space, stay on the same line
+                print(str(board[i][j]) + " ", end="")
+         
+                
+         
+def check_end (upt_game, correct_Matrix):
+    
+    if strikes >= Max_Strikes:
+        return 'Lost' # max strikes reached game ends
+    for row in range(9):
+        for col in range(9):
+            num = upt_game [row] [col]
+            
+            if num != correct_Matrix[row][col]:
+            
+                return 'incorrect value(s) present'
+        break
+    else:
+        return 'won, game ended'
+
+
+def check_game(updated_matrix, correct_matrix): # function that checks the game
+    
+    strikes = 0 # variable strikes is set to zero
+    
+    if updated_matrix == correct_matrix: # conditions whether the updated matrix matches with the correct matrix
+       
+        print('Game correct')
+    
+    else: 			# if the functions doesnt meet what is excpected, we go next to the strike counter(included with moaaz)
+        strikes= strikes + 1			# adds a strike as soon as a mistake is made
+
+    return strikes  		# tells us at end how many strikes are made
+
+
+def input_number(board, number, position):
+    """
+    Inputs a number into the specified position in a Sudoku board.
+
+    Parameters:
+    - board (np.ndarray): 9x9 Sudoku puzzle array
+    - number (int): number to input (1–9)
+    - position (list or tuple): [row, col] in 0-based index
+
+    Returns:
+    - np.ndarray: the modified board
+    """
+    row, col = position
+    if not (0 <= row < 9 and 0 <= col < 9):
+        raise ValueError("Row and column must be between 0 and 8.")
+    if not (1 <= number <= 9):
+        raise ValueError("Number must be between 1 and 9.")
+    
+    board[row, col] = number
+    
+    return board
+
+def input_number_final(board):
+    
+    display_board(board)
+    
+    print("Enter your move (row column number) or 'q' to quit:")
+    user_input = input().strip()
+    if user_input.lower() == 'q':
+        print("Thanks for playing!")
+          
+    try:
+            row, col, num = map(int, user_input.split())
+            if board[row][col] == 0:
+                board[row][col] = num
+                display_board(board)
+            else:
+                print("Cell is already filled!")
+    
+    
+    
+    except (ValueError, IndexError):
+    
+        print("Invalid input. Please enter as: row col num (0-indexed)")
+            
+            
+
+
+#============================================================================
+#============================================================================
+#                           MAIN GAME CODE
+#============================================================================
+#============================================================================
+
+
+game, solution = load_labeled_sudoku()
+display_board(game)
